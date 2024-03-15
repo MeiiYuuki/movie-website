@@ -3,7 +3,7 @@
 }
 
 .App-header {
-  background-color: #222831;
+  background-color: #210B2C;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -25,15 +25,15 @@
 
 .movie-wrapper{
   width: 350px;
-  color: #222831;
-  background-color: #ffc639;
+  color: #eeeeee;
+  background-color: #373b69;
   border-radius: 10px;
   transition: .3s ease all;
   -webkit-transition: .3s ease all;
   -moz-transition: .3s ease all;
   -ms-transition: .3s ease all;
   -o-transition: .3s ease all;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  box-shadow: 0.2px 4px 5px rgba(136, 136, 136, 0.1);
   text-decoration: none;
   margin-bottom: 1rem;
 }
@@ -53,11 +53,18 @@
   border-radius: 10px;
 }
 
+.movie-header{
+  display: flex;
+  justify-content: space-evenly;
+  padding: 1rem 1rem 1rem;
+  align-items: center;
+}
+
 .movie-title{
+  text-align: center;
   font-weight: bold;
-  height: 60px;
-  margin: 10px 10px;
-  font-size: 24px;
+  font-size: 22px;
+  width: 100%;
 }
 
 .movie-date{
@@ -67,19 +74,17 @@
 
 .movie-img{
   width: 350px;
+  border-radius: 10px 10px 0 0;
   box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 15px;
 }
 
 .movie-rating{
+  font-size: 18px;
+  padding: 5px;
+  border-radius: 4px;
   font-weight: bold;
-  color: #222831;
-  margin-top: 10px;
-  margin-bottom: 20px;
-  text-decoration: underline;
-  display: flex;
-  justify-content: center;
-  align-self: center;
-  gap: 10px;
+  color: #eeeeee;
+  background-color: #210B2C;
 }
 
 .paginations{
@@ -180,7 +185,7 @@
 }
 
 .movie-detail-rating{
-  color: #ffc639;
+  color: #eeeeee;
   font-weight: bold;
   margin-top: 10px;
   display: flex;
@@ -208,11 +213,11 @@
 
 .back-btn:hover{
   cursor: pointer;
-  color: #ffc639;
+  scale: 110%;
 }
 
 .movie-detail-overview{
-  font-size: 20px;
+  font-size: 18px;
 }
 
 .movie-detail-production{
@@ -226,13 +231,16 @@
 
 .production-name-wrapper{
   display: flex;
+  flex: 33%;
+  flex-wrap: wrap;
   gap: 15px;
+  align-items: center;
   padding-left: 0.5rem;
 }
 
 .production-name{
-  background-color: #ffc639;
-  color: #222831;
+  background-color: #373b69;
+  color: #eeee;
   font-weight: bold;
   font-style: italic;
   border-radius: 5px;
@@ -246,7 +254,7 @@
   border-radius: 50%;
   border: 9px solid;
   border-color: #eeeeee;
-  border-right-color: #ffc639;
+  border-right-color: #373b69;
   animation: spinner-d3wgkg 1s infinite linear;
 }
 
@@ -254,4 +262,134 @@
   to {
      transform: rotate(1turn);
   }
+}
+
+.movie-videoPlayer{
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.close-btn{
+  cursor: pointer;
+  transition: all;
+}
+
+.close-btn:hover{
+  scale: 115%;
+  font-weight: bold;
+}
+
+.youtube-logo{
+  position: absolute;
+  cursor: pointer;
+  bottom: 5;
+  right: 5;
+  width: 50px;
+  margin-top: 5px;
+  transition: all;
+  -webkit-transition: .3s ease all;
+  -moz-transition: .3s ease all;
+  -ms-transition: .3s ease all;
+  -o-transition: .3s ease all;
+}
+
+.youtube-logo:hover{
+  scale: 110%;
+}
+
+
+.movie-review{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 50px;
+  padding-bottom: 2rem;
+}
+
+.reviewer{
+  width: 500px;
+  background-color: #373b69;
+  padding: 20px;
+  border-radius: 5px;
+  color: #eeeeee;
+}
+
+.reviewer-header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.reviewer-rating{
+  width: 30px;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 5px;
+  border-radius: 4px;
+  color: #eeeeee;
+  background-color: #210B2C;
+}
+
+.reviewer-name{
+  font-weight: bold;
+  font-size: 22px;
+  font-style: italic;
+}
+
+.reviewer-comment{
+  --max-lines: 2;
+  --line-height: 1.5;
+
+  max-height: calc(var(--max-lines) * 1em * var(--line-height));
+  line-height: var(--line-height);
+
+  margin-top: 1rem;
+  font-size: 14px;
+  text-align: left;
+
+  overflow: hidden;
+  position: relative;
+}
+
+.reviewer-comment:has(+ .expand-btn:not(:checked))::before{
+  content: "";
+  position: absolute;
+  height: calc(1em * var(--line-height));
+  width: 100%;
+  bottom: 0;
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent, #373b69);
+}
+
+.expand-btn{
+  margin-top: 0.5rem;
+  display: flex;
+  appearance: none;
+  border: 1px solid white;
+  padding: .5em;
+  border-radius: .25em;
+  cursor: pointer;
+  color: #eeeeee;
+}
+
+.expand-btn:hover{
+  background-color: #e0e0e0;
+  color: black;
+}
+
+.expand-btn::before{
+  content: "Show more";
+  font-weight: bold;
+}
+
+.expand-btn:checked::before{
+  content: "Show less";
+  font-weight: bold;
+}
+
+.reviewer-comment:has(+ .expand-btn:checked){
+  max-height: none;
 }

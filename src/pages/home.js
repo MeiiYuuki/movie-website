@@ -14,18 +14,16 @@ const Home = () => {
   const [page, setPage] = useState(1);
   const [isSearch, setSearch] = useState(false);
   const [keyword, setKeyword] = useState("");
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
 
   const fetchData = async () => {
     const pages = await moviePage(page);
-    console.log("pages", pages);
     setTotalPage(pages?.total_pages);
     setPopularMovie(pages?.results);
   };
 
   const fetchSearchData = async () => {
     const pages = await searchMoviePage(keyword, page);
-    console.log("pages", pages);
     setTotalPage(pages?.total_pages);
     setSearchMovieList(pages?.results);
   };
@@ -35,23 +33,25 @@ const Home = () => {
     if (isSearch) {
       fetchSearchData();
     }
-    setTimeout(() => setLoading(false), 500)
+    setTimeout(() => setLoading(false), 500);
   }, [page]);
 
   const PopularMovieList = () => {
     return popularMovie.map((movie, i) => {
       return (
         <Link className="movie-wrapper" key={i} to={`/movie/${movie.id}`}>
-          <div className="movie-title">{movie.title}</div>
           <img
             className="movie-img"
             src={`${process.env.REACT_APP_BASEIMGURL}${movie.poster_path}`}
             alt=""
           />
-          <div className="movie-date">Release: {movie.release_date}</div>
-          <div className="movie-rating">
-            <Star size={32} weight="fill" /> {movie.vote_average}
+          <div className="movie-header">
+            <div className="movie-title">{movie.title}</div>
+            <div className="movie-rating">
+              {movie.vote_average}
+            </div>
           </div>
+          {/* <div className="movie-date">Release: {movie.release_date}</div> */}
         </Link>
       );
     });
@@ -89,7 +89,6 @@ const Home = () => {
       setSearch(true);
       setPage(1);
       const query = await searchMoviePage(keyword, page);
-      console.log("query", query);
       setTotalPage(query?.total_pages);
       setSearchMovieList(query?.results);
     } else if (!keyword.length) {
@@ -127,13 +126,29 @@ const Home = () => {
           </div>
         )}
         <div className="movie-container">
-          {!isSearch ? <PopularMovieList /> : <SearchMovieList />}
-        </div>
-        {popularMovie.length > 0 || searchMovieList.length > 0 ? (
-          <Pagination page={page} totalPage={totalPage} setPage={setPage} />
-        ) : (
+          {!isSearch ? (
+            <>
+              <PopularMovieList />
+              {!popularMovie.length ? (
+                <></>
+              ) : (
+                <Pagination
+                  page={page}
+                  totalPage={totalPage}
+                  setPage={setPage}
+                />
+              )}
+            </>
+          ) : (
+            <SearchMovieList />
+          )}
+          {!searchMovieList.length ? (
+            <></>
+          ) : (
+            <Pagination page={page} totalPage={totalPage} setPage={setPage} />
+          )}
           <></>
-        )}
+        </div>
       </header>
     </div>
   );
