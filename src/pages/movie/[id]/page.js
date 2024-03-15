@@ -30,6 +30,22 @@ const Page = () => {
     setReview(review);
   };
 
+  const changeColor = (vote) => {
+    if (vote >= 7) {
+      return {
+        color: "#66FF99",
+      };
+    } else if (vote > 4 && vote < 7) {
+      return {
+        color: "#FFC300",
+      };
+    } else if (vote < 4) {
+      return {
+        color: "#C70039",
+      };
+    }
+  };
+
   useEffect(() => {
     getMovie();
     getVideo();
@@ -72,7 +88,10 @@ const Page = () => {
               })}
             </div>
           </div>
-          <div className="movie-detail-rating">
+          <div
+            className="movie-detail-rating"
+            style={changeColor(movieDetail.vote_average)}
+          >
             <Star size={32} weight="fill" /> {movieDetail.vote_average}
           </div>
           <div>
@@ -87,8 +106,13 @@ const Page = () => {
             <div className="review-container" key={index}>
               <div className="reviewer">
                 <div className="reviewer-header">
-                    <div className="reviewer-name">{reviews.author}</div>
-                    <div className="reviewer-rating">{reviews.author_details.rating}</div>
+                  <div className="reviewer-name">{reviews.author} ({reviews.author_details.username}) </div>
+                  <div
+                    className="reviewer-rating"
+                    style={changeColor(reviews.author_details.rating)}
+                  >
+                    {reviews.author_details.rating}
+                  </div>
                 </div>
                 <div className="reviewer-comment">{reviews.content}</div>
                 {/* {
@@ -96,7 +120,7 @@ const Page = () => {
                    <input className="expand-btn" type="checkbox"/> :
                   <></>
                 } */}
-                <input className="expand-btn" type="checkbox"/>
+                <input className="expand-btn" type="checkbox" />
               </div>
             </div>
           );

@@ -14,7 +14,7 @@
 }
 
 .movie-container{
-  width: 100%;
+  width: 90%;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -53,18 +53,45 @@
   border-radius: 10px;
 }
 
+.genre-container{
+  width: 70%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 2rem;
+}
+
+.genre-tags-wrapper{
+  cursor: pointer;
+  font-size: 15pt;
+  border-radius: 5px;
+  padding: 6px;
+  transition: .3s ease all;
+  -webkit-transition: .3s ease all;
+  -moz-transition: .3s ease all;
+  -ms-transition: .3s ease all;
+  -o-transition: .3s ease all;
+  font-style: italic;
+}
+
+.genre-tags-wrapper:hover{
+  scale: 105%;
+}
+
 .movie-header{
   display: flex;
-  justify-content: space-evenly;
-  padding: 1rem 1rem 1rem;
+  justify-content: space-between;
+  padding: 0.5rem 1rem 1rem;
   align-items: center;
 }
 
 .movie-title{
-  text-align: center;
+  margin-top: 0;
+  text-align: left;
   font-weight: bold;
-  font-size: 22px;
-  width: 100%;
+  font-size: 20px;
 }
 
 .movie-date{
@@ -80,11 +107,15 @@
 
 .movie-rating{
   font-size: 18px;
-  padding: 5px;
+  padding: 0.25rem 0.5rem;
   border-radius: 4px;
   font-weight: bold;
   color: #eeeeee;
   background-color: #210B2C;
+}
+
+.text-pages{
+  font-size: 15pt;
 }
 
 .paginations{
@@ -92,11 +123,15 @@
   justify-content: center;
   align-items: center;
   padding: 10px;
-  gap: 10px;
+  gap: 20px;
+  font-size: 17pt;
   font-weight: bold;
 }
 
 .pagination-prev{
+  background-color: #373b69;
+  padding: 5px;
+  border-radius: 5px;
   transition: .3s ease all;
   -webkit-transition: .3s ease all;
   -moz-transition: .3s ease all;
@@ -105,6 +140,9 @@
 }
 
 .pagination-next{
+  background-color: #373b69;
+  padding: 5px;
+  border-radius: 5px;
   transition: .3s ease all;
   -webkit-transition: .3s ease all;
   -moz-transition: .3s ease all;
@@ -114,12 +152,12 @@
 
 .pagination-prev:hover{
   cursor: pointer;
-  color: #ffc639;
+  scale: 105%;
 }
 
 .pagination-next:hover{
   cursor: pointer;
-  color: #ffc639;
+  scale: 105%;
 }
 
 .search-title{
@@ -150,11 +188,11 @@
 
 .back-button:hover{
   cursor: pointer;
-  color: #ffc639;
+  scale: 120%;
 }
 
 .movie-detail-container{
-  background-color: #222831;
+  background-color: #210B2C;
   min-height: 100vh;
   font-size: calc(10px + 2vmin);
   color: #eeeeee;
@@ -163,10 +201,10 @@
 .movie-detail-wrapper{
   display: flex;
   margin: 22px;
-  padding-top: 20px;
+  padding: 1rem;
   justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: 30px;
 }
 
 .movie-detail-component{
@@ -310,7 +348,7 @@
 }
 
 .reviewer{
-  width: 500px;
+  width: 350px;
   background-color: #373b69;
   padding: 20px;
   border-radius: 5px;

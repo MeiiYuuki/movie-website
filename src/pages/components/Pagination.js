@@ -25,7 +25,7 @@ const Pagination = ({ page, totalPage, setPage }) => {
           Prev
         </a>
       )}
-      <p>
+      <p className="text-pages">
         {page} of {totalPage}
       </p>
       {page >= totalPage ? null : (

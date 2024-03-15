@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import "../App.css";
-import { moviePage, searchMoviePage } from "../api.js";
+import {
+  getGenreMovieList,
+  getMovieByGenreList,
+  moviePage,
+  searchMoviePage,
+} from "../api.js";
 import { Star } from "@phosphor-icons/react";
 import { Link } from "react-router-dom";
 import Pagination from "./components/Pagination.js";
@@ -9,6 +14,9 @@ import Loading from "./loading.js";
 
 const Home = () => {
   const [popularMovie, setPopularMovie] = useState([]);
+  const [genreMovie, setGenreMovie] = useState([]);
+  // var selectedGenre = [];
+  const [selectedGenre, setSelectedGenre] = useState([]);
   const [searchMovieList, setSearchMovieList] = useState([]);
   const [totalPage, setTotalPage] = useState(0);
   const [page, setPage] = useState(1);
@@ -28,7 +36,67 @@ const Home = () => {
     setSearchMovieList(pages?.results);
   };
 
+  const fetchGenreList = async () => {
+    const genreList = await getGenreMovieList();
+    setGenreMovie(genreList);
+  };
+
+  async function handleOnClick(id) {
+    let genres = [...selectedGenre];
+    if (selectedGenre?.length == 0) {
+      genres.push(id);
+    } else {
+      if (selectedGenre.includes(id)) {
+        genres.map((genreId, index) => {
+          if (genreId == id) {
+            genres.splice(index, 1);
+          }
+        });
+      } else {
+        genres.push(id);
+      }
+    }
+    setSelectedGenre(genres);
+    // console.log("genres", genres);
+    const newMovieList = await getMovieByGenreList(genres, 1);
+    // console.log("newMovieList", newMovieList);
+    setTotalPage(newMovieList.total_pages);
+    setPopularMovie(newMovieList.results);
+  }
+
+  const changeColor = (vote) => {
+    if (vote >= 7) {
+      return {
+        color: "#66FF99",
+      };
+    } else if (vote > 4 && vote < 7) {
+      return {
+        color: "#FFC300",
+      };
+    } else if (vote < 4) {
+      return {
+        color: "#C70039",
+      };
+    }
+  };
+
+  const isClicked = (id) => {
+    if (selectedGenre.find((genreId) => genreId == id)) {
+      return {
+        backgroundColor: "#eee",
+        color: "black",
+      };
+    } else {
+      return {
+        backgroundColor: "#373b69",
+        color: "#eee",
+      };
+    }
+  };
+
   useEffect(() => {
+    setSelectedGenre([]);
+    fetchGenreList();
     fetchData();
     if (isSearch) {
       fetchSearchData();
@@ -47,7 +115,10 @@ const Home = () => {
           />
           <div className="movie-header">
             <div className="movie-title">{movie.title}</div>
-            <div className="movie-rating">
+            <div
+              className="movie-rating"
+              style={changeColor(movie.vote_average)}
+            >
               {movie.vote_average}
             </div>
           </div>
@@ -64,27 +135,47 @@ const Home = () => {
       return searchMovieList?.map((movie, i) => {
         return (
           <Link className="movie-wrapper" key={i} to={`/movie/${movie.id}`}>
-            <div className="movie-title">{movie.title}</div>
             <img
               className="movie-img"
               src={`${process.env.REACT_APP_BASEIMGURL}${movie.poster_path}`}
               alt=""
             />
-            <div className="movie-date">Release: {movie.release_date}</div>
-            <div className="movie-rating">
-              <Star size={32} weight="fill" /> {movie.vote_average}
+            <div className="movie-header">
+              <div className="movie-title">{movie.title}</div>
+              <div
+                className="movie-rating"
+                style={changeColor(movie.vote_average)}
+              >
+                {movie.vote_average}
+              </div>
             </div>
+            {/* <div className="movie-date">Release: {movie.release_date}</div> */}
           </Link>
         );
       });
     }
   };
 
+  const GenreList = () => {
+    return genreMovie?.map((genre, idx) => {
+      return (
+        <div
+          className="genre-tags-wrapper"
+          key={idx}
+          onClick={() => handleOnClick(genre.id)}
+          style={isClicked(genre.id)}
+        >
+          {genre.name}
+        </div>
+      );
+    });
+  };
+
   const search = async (keyword) => {
     // memberikan validasi jika hasil search hanya ada whitespace saja maka jangan tembak API
     // keyword.replace(/\s/g, '').length
 
-    if (keyword.length > 3 && keyword.replace(/\s/g, '').length) {
+    if (keyword.length > 3 && keyword.replace(/\s/g, "").length) {
       setKeyword(keyword);
       setSearch(true);
       setPage(1);
@@ -112,7 +203,9 @@ const Home = () => {
           onChange={({ target }) => search(target.value)}
         />
         {!isSearch ? (
-          <h3>TOP RATING MOVIES</h3>
+          <div className="genre-container">
+            <GenreList />
+          </div>
         ) : (
           <div className="search-title">
             {!searchMovieList.length ? (
@@ -125,30 +218,30 @@ const Home = () => {
             )}
           </div>
         )}
-        <div className="movie-container">
-          {!isSearch ? (
-            <>
+        {!isSearch ? (
+          <>
+            <div className="movie-container">
               <PopularMovieList />
-              {!popularMovie.length ? (
-                <></>
-              ) : (
-                <Pagination
-                  page={page}
-                  totalPage={totalPage}
-                  setPage={setPage}
-                />
-              )}
-            </>
-          ) : (
-            <SearchMovieList />
-          )}
-          {!searchMovieList.length ? (
-            <></>
-          ) : (
-            <Pagination page={page} totalPage={totalPage} setPage={setPage} />
-          )}
-          <></>
-        </div>
+            </div>
+            {!popularMovie.length ? (
+              <></>
+            ) : (
+              <Pagination page={page} totalPage={totalPage} setPage={setPage} />
+            )}
+          </>
+        ) : (
+          <>
+            <div className="movie-container">
+              <SearchMovieList />
+            </div>
+            {!searchMovieList.length ? (
+              <></>
+            ) : (
+              <Pagination page={page} totalPage={totalPage} setPage={setPage} />
+            )}
+          </>
+        )}
+        <></>
       </header>
     </div>
   );
