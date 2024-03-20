@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { getMovieDetail, getMovieVideo, getReviewMovie } from "../../../api";
 import { Link, useParams } from "react-router-dom";
-import { Star } from "@phosphor-icons/react";
+import { Star, X, YoutubeLogo } from "@phosphor-icons/react";
 import Loading from "../../loading";
 import VideoPlayer from "../../components/VideoPlayer";
+import ReactModal from "react-modal";
+import VideoCarousel from "../../components/VideoCarousel";
 
 const Page = () => {
   const id = useParams();
@@ -11,6 +13,22 @@ const Page = () => {
   const [movieReview, setReview] = useState([]);
   const [video, setVideo] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [overlay, setOverlay] = useState(false);
+  const [modalIsOpen, setIsOpen] = useState(false)
+
+  const customStyles = {
+    overlay:{
+      backgroundColor: 'rgba(0, 0, 0, 0.5)'
+    },
+    content: {
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+    },
+  };
 
   const getMovie = async () => {
     const movie = await getMovieDetail(id.id);
@@ -19,11 +37,9 @@ const Page = () => {
   const getVideo = async () => {
     // var tempVidArray = []
     const vid = await getMovieVideo(id.id);
-    // vid?.map((video) =>{
-    //     tempVidArray.push(video.key)
-    // })
-    // setVideo(tempVidArray)
-    setVideo(vid[0].key);
+    // console.log('vid', vid)
+    setVideo(vid)
+    // setVideo(vid[0].key);
   };
   const getMovieReview = async () => {
     const review = await getReviewMovie(id.id);
@@ -46,6 +62,16 @@ const Page = () => {
     }
   };
 
+  const showVideo = () => {
+    console.log("clicked");
+    setIsOpen(true)
+    setOverlay(true);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+  }
+
   useEffect(() => {
     getMovie();
     getVideo();
@@ -59,6 +85,24 @@ const Page = () => {
 
   return (
     <div className="movie-detail-container">
+      {overlay ? (
+        <div className="modals">
+          <ReactModal
+            isOpen={modalIsOpen}
+            onRequestClose={closeModal}
+            style={customStyles}
+            contentLabel="Example Modal"
+            ariaHideApp={false}
+          >
+            <div className="modal-content">
+              <X size={24} className="close-btn" onClick={closeModal}/>
+              <VideoCarousel vidArray={video}/>
+            </div>
+          </ReactModal>
+        </div>
+      ) : (
+        <></>
+      )}
       <div className="movie-detail-backBtn">
         <Link className="back-btn" to={`/`}>
           Back
@@ -94,8 +138,9 @@ const Page = () => {
           >
             <Star size={32} weight="fill" /> {movieDetail.vote_average}
           </div>
-          <div>
-            <VideoPlayer youtubeId={video} />
+          <div className="movie-video" onClick={showVideo}>
+            <YoutubeLogo className="youtube-logo" size={50} weight="fill" />
+            Watch Video
           </div>
         </div>
       </div>
@@ -106,7 +151,9 @@ const Page = () => {
             <div className="review-container" key={index}>
               <div className="reviewer">
                 <div className="reviewer-header">
-                  <div className="reviewer-name">{reviews.author} ({reviews.author_details.username}) </div>
+                  <div className="reviewer-name">
+                    {reviews.author} ({reviews.author_details.username}){" "}
+                  </div>
                   <div
                     className="reviewer-rating"
                     style={changeColor(reviews.author_details.rating)}

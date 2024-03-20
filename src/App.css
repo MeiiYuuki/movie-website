@@ -11,6 +11,7 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: #eeeeee;
+  padding: 1.5rem 0;
 }
 
 .movie-container{
@@ -45,7 +46,7 @@
 
 .movie-input{
   width: 40%;
-  height: 28px;
+  height: 50px;
   font-size: 14px;
   margin-bottom: 2rem;
   padding: 10px;
@@ -115,6 +116,7 @@
 }
 
 .text-pages{
+  padding-top: 0.75rem;
   font-size: 15pt;
 }
 
@@ -129,6 +131,9 @@
 }
 
 .pagination-prev{
+  width: 75px;
+  text-decoration: none;
+  color: #e0e0e0;
   background-color: #373b69;
   padding: 5px;
   border-radius: 5px;
@@ -140,6 +145,9 @@
 }
 
 .pagination-next{
+  width: 75px;
+  text-decoration: none;
+  color: #e0e0e0;
   background-color: #373b69;
   padding: 5px;
   border-radius: 5px;
@@ -165,6 +173,7 @@
   justify-content: center;
   align-items: center;
   gap: 10px;
+  padding-bottom: 1rem;
 }
 
 .not-found{
@@ -302,12 +311,85 @@
   }
 }
 
+.movie-video{
+  cursor: pointer;
+  width: 130px;
+  margin-top: 0.75rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 10pt;
+  font-weight: bold;
+  border: 1px solid white;
+  border-radius: 10px;
+  transition: all;
+  -webkit-transition: .3s ease all;
+  -moz-transition: .3s ease all;
+  -ms-transition: .3s ease all;
+  -o-transition: .3s ease all;
+}
+
+.movie-video:hover{
+  scale: 110%;
+  background-color: #eeeeee;
+  color: #210B2C;
+}
+
+.modal-content{
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+.movie-video-content{
+  display: flex;
+  flex-direction: column;
+}
+
+.carousel-video{
+  margin-top: 1rem;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px; 
+  margin-bottom: 1rem;
+}
+
+.carousel{
+  width: 640px;
+  height: 350px;
+  margin: auto;
+}
+
+.carousel-control-prev{
+  height: 300px;
+}
+
+.carousel-control-next{
+  height: 300px;
+}
+
+.carousel .carousel-control-prev-icon{
+  visibility: hidden;
+}
+
+.carousel:hover .carousel-control-prev-icon{
+  visibility: visible;
+}
+
+.carousel .carousel-control-next-icon{
+  visibility: hidden;
+}
+
+.carousel:hover .carousel-control-next-icon{
+  visibility: visible;
+}
+
 .movie-videoPlayer{
   position: fixed;
   bottom: 0;
   right: 0;
   display: flex;
   flex-direction: column;
+  z-index: 1;
 }
 
 .close-btn{
@@ -321,22 +403,21 @@
 }
 
 .youtube-logo{
-  position: absolute;
-  cursor: pointer;
-  bottom: 5;
-  right: 5;
-  width: 50px;
-  margin-top: 5px;
-  transition: all;
+  /* position: absolute; */
+  /* cursor: pointer; */
+  /* bottom: 5;
+  right: 5; */
+  width: 30px;
+  /* transition: all;
   -webkit-transition: .3s ease all;
   -moz-transition: .3s ease all;
   -ms-transition: .3s ease all;
-  -o-transition: .3s ease all;
+  -o-transition: .3s ease all; */
 }
 
-.youtube-logo:hover{
+/* .youtube-logo:hover{
   scale: 110%;
-}
+} */
 
 
 .movie-review{
@@ -411,6 +492,7 @@
   border-radius: .25em;
   cursor: pointer;
   color: #eeeeee;
+  font-size: 10pt;
 }
 
 .expand-btn:hover{
