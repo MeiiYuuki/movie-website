@@ -3,9 +3,9 @@ import { getMovieDetail, getMovieVideo, getReviewMovie } from "../../../api";
 import { Link, useParams } from "react-router-dom";
 import { Star, X, YoutubeLogo } from "@phosphor-icons/react";
 import Loading from "../../loading";
-import VideoPlayer from "../../components/VideoPlayer";
 import ReactModal from "react-modal";
 import VideoCarousel from "../../components/VideoCarousel";
+import moment from "moment/moment";
 
 const Page = () => {
   const id = useParams();
@@ -51,7 +51,7 @@ const Page = () => {
       return {
         color: "#66FF99",
       };
-    } else if (vote > 4 && vote < 7) {
+    } else if (vote >= 4 && vote < 7) {
       return {
         color: "#FFC300",
       };
@@ -118,7 +118,7 @@ const Page = () => {
           <h2>{movieDetail.title}</h2>
           <p className="movie-detail-overview">{movieDetail.overview}</p>
           <div className="movie-detail-date">
-            Release Date : {movieDetail.release_date}
+            Release Date : {moment(movieDetail.release_date).format("DD MMMM YYYY")}
           </div>
           <div className="movie-detail-production">
             Production By :

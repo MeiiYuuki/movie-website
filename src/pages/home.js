@@ -6,7 +6,6 @@ import {
   moviePage,
   searchMoviePage,
 } from "../api.js";
-import { Star } from "@phosphor-icons/react";
 import { Link } from "react-router-dom";
 import Pagination from "./components/Pagination.js";
 import NotFound from "./not-found.js";
@@ -15,11 +14,12 @@ import Loading from "./loading.js";
 const Home = () => {
   const [popularMovie, setPopularMovie] = useState([]);
   const [genreMovie, setGenreMovie] = useState([]);
-  // var selectedGenre = [];
+  const [filteredMovie, setFilteredMovie] = useState([]);
   const [selectedGenre, setSelectedGenre] = useState([]);
   const [searchMovieList, setSearchMovieList] = useState([]);
   const [totalPage, setTotalPage] = useState(0);
   const [page, setPage] = useState(1);
+  const [isFiltered, setFiltered] = useState(false);
   const [isSearch, setSearch] = useState(false);
   const [keyword, setKeyword] = useState("");
   const [loading, setLoading] = useState(true);
@@ -41,7 +41,16 @@ const Home = () => {
     setGenreMovie(genreList);
   };
 
-  async function handleOnClick(id) {
+  const fetchGenreData = async (genres) =>{
+    const newMovieList = await getMovieByGenreList(genres, page);
+    // console.log("newMovieList", newMovieList);
+    setTotalPage(newMovieList.total_pages);
+    setFilteredMovie(newMovieList.results);
+    setFiltered(true)
+  }
+
+  function handleOnClick(id) {
+    setPage(1)
     let genres = [...selectedGenre];
     if (selectedGenre?.length == 0) {
       genres.push(id);
@@ -58,10 +67,7 @@ const Home = () => {
     }
     setSelectedGenre(genres);
     // console.log("genres", genres);
-    const newMovieList = await getMovieByGenreList(genres, 1);
-    // console.log("newMovieList", newMovieList);
-    setTotalPage(newMovieList.total_pages);
-    setPopularMovie(newMovieList.results);
+    fetchGenreData(genres)
   }
 
   const changeColor = (vote) => {
@@ -69,7 +75,7 @@ const Home = () => {
       return {
         color: "#66FF99",
       };
-    } else if (vote > 4 && vote < 7) {
+    } else if (vote >= 4 && vote < 7) {
       return {
         color: "#FFC300",
       };
@@ -95,17 +101,43 @@ const Home = () => {
   };
 
   useEffect(() => {
-    setSelectedGenre([]);
     fetchGenreList();
     fetchData();
     if (isSearch) {
       fetchSearchData();
+    }
+    if(isFiltered){
+      fetchGenreData(selectedGenre)
     }
     setTimeout(() => setLoading(false), 500);
   }, [page]);
 
   const PopularMovieList = () => {
     return popularMovie.map((movie, i) => {
+      return (
+        <Link className="movie-wrapper" key={i} to={`/movie/${movie.id}`}>
+          <img
+            className="movie-img"
+            src={`${process.env.REACT_APP_BASEIMGURL}${movie.poster_path}`}
+            alt=""
+          />
+          <div className="movie-header">
+            <div className="movie-title">{movie.title}</div>
+            <div
+              className="movie-rating"
+              style={changeColor(movie.vote_average)}
+            >
+              {movie.vote_average}
+            </div>
+          </div>
+          {/* <div className="movie-date">Release: {movie.release_date}</div> */}
+        </Link>
+      );
+    });
+  };
+
+  const FilteredMovieList = () => {
+    return filteredMovie.map((movie, i) => {
       return (
         <Link className="movie-wrapper" key={i} to={`/movie/${movie.id}`}>
           <img
@@ -220,13 +252,36 @@ const Home = () => {
         )}
         {!isSearch ? (
           <>
-            <div className="movie-container">
-              <PopularMovieList />
-            </div>
-            {!popularMovie.length ? (
-              <></>
+            {isFiltered ? (
+              <>
+                <div className="movie-container">
+                  <FilteredMovieList />
+                </div>
+                {!filteredMovie.length ? (
+                  <></>
+                ) : (
+                  <Pagination
+                    page={page}
+                    totalPage={totalPage}
+                    setPage={setPage}
+                  />
+                )}
+              </>
             ) : (
-              <Pagination page={page} totalPage={totalPage} setPage={setPage} />
+              <>
+                <div className="movie-container">
+                  <PopularMovieList />
+                </div>
+                {!popularMovie.length ? (
+                  <></>
+                ) : (
+                  <Pagination
+                    page={page}
+                    totalPage={totalPage}
+                    setPage={setPage}
+                  />
+                )}
+              </>
             )}
           </>
         ) : (

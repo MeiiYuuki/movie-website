@@ -1,6 +1,4 @@
 import { FileSearch } from '@phosphor-icons/react/dist/ssr';
-import React from 'react';
-import { Link } from 'react-router-dom';
 
 const NotFound = () => {
     const handleReload = () =>{
